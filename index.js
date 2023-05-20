@@ -43,7 +43,12 @@ async function run() {
       const result = await toysCollection.findOne(query);
       res.send(result);
     })
-    
+    // get the only user toy data add by user
+    app.get('/myToys/:email', async (req, res) => {
+      const result = await toysCollection.find({ email: req.params.email }).toArray();
+      res.send(result);
+    })
+
     // search with toy name and get toys
     app.get('/toys/:text', async (req, res) => {
       const text = req.params.text;
@@ -60,7 +65,6 @@ async function run() {
     // add toy data in database
     app.post('/addToy', async (req, res) => {
       const toy = req.body;
-      console.log(toy);
       const result = await toysCollection.insertOne(toy);
       res.send(result);
     })
