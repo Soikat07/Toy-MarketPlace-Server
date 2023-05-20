@@ -20,12 +20,20 @@ const client = new MongoClient(uri, {
     strict: true,
     deprecationErrors: true,
   },
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  maxPoolSize:10,
 });
 
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    client.connect(err => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+    });
 
     const toysCollection = client.db('toyDB').collection('toys');
 
@@ -66,6 +74,28 @@ async function run() {
     app.post('/addToy', async (req, res) => {
       const toy = req.body;
       const result = await toysCollection.insertOne(toy);
+      res.send(result);
+    })
+
+    // update toy data
+    app.put('/updateToy/:id', async (req, res) => {
+      const filter = { _id: new ObjectId(req.params.id) };
+      const options = { upsert: true };
+      const toyData = req.body;
+      const updateToy = {
+        $set: {
+          seller_name: toyData.seller_name,
+          email: toyData.email,
+          toy_name: toyData.toy_name,
+          toy_picture: toyData.toy_picture,
+          price: toyData.price,
+          rating: toyData.rating,
+          available_quantity: toyData.available_quantity,
+          sub_category: toyData.sub_category,
+          description: toyData.description
+        },
+      };
+      const result = await toysCollection.updateOne(filter, updateToy, options);
       res.send(result);
     })
 
