@@ -50,7 +50,7 @@ async function run() {
     })
 
     // search with toy name and get toys
-    app.get('/toys/:text', async (req, res) => {
+    app.get('/allToys/:text', async (req, res) => {
       const text = req.params.text;
       const result = await toysCollection
         .find({
@@ -69,6 +69,12 @@ async function run() {
       res.send(result);
     })
 
+    // delete a toy data from database
+    app.delete('/myToys/:id', async (req, res) => {
+      const id = req.params.id;
+      const result = await toysCollection.deleteOne({ _id: new ObjectId(id) });
+      res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 });
