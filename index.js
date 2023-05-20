@@ -56,6 +56,11 @@ async function run() {
       const result = await toysCollection.find({ email: req.params.email }).toArray();
       res.send(result);
     })
+    // get data by sub_category
+    app.get('/:category', async (req, res) => {
+      const result = await toysCollection.find({ sub_category: req.params.category }).toArray();
+      res.send(result);
+    })
 
     // search with toy name and get toys
     app.get('/allToys/:text', async (req, res) => {
