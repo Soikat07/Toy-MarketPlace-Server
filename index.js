@@ -51,11 +51,25 @@ async function run() {
       const result = await toysCollection.findOne(query);
       res.send(result);
     })
+    
     // get the only user toy data add by user
-    app.get('/myToys/:email', async (req, res) => {
-      const result = await toysCollection.find({ email: req.params.email }).toArray();
+    app.get('/myToys', async (req, res) => {
+      console.log(req.query.sort);
+      let query = {};
+      let sort = {};
+      if (req.query.sort === 'Ascending') {
+        sort = { price: 1 };
+      }
+      else {
+        sort = { price: -1 }
+      }
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const result = await toysCollection.find(query).sort(sort).toArray();
       res.send(result);
-    })
+    });
+
     // get data by sub_category
     app.get('/:category', async (req, res) => {
       const result = await toysCollection.find({ sub_category: req.params.category }).toArray();
