@@ -36,6 +36,7 @@ async function run() {
     });
 
     const toysCollection = client.db('toyDB').collection('toys');
+    const featuredCollection = client.db('toyDB').collection('featuredToy');
 
 
     // get all toys data from database
@@ -43,6 +44,12 @@ async function run() {
       const result = await toysCollection.find().toArray();
       res.send(result);
     });
+
+    // get all data from featured toy collection
+    app.get('/featuredToy', async (req, res) => {
+      const result = await featuredCollection.find().toArray();
+      res.send(result);
+    })
 
     // get single toy data from database using id
     app.get('/toys/:id', async (req, res) => {
